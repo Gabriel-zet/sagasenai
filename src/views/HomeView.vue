@@ -30,18 +30,22 @@
             <p>{{ textP3n4 }}</p>
           </div>
           
-          <img src="../assets/fotoTela2.svg" alt="" />
+          <img src="/fotop3.jpg" alt="">
         </div>
       </div>
     </section>
     <section>
       <ProjetosGanhadores/>
     </section>
+    <section>
+      <CursosECategorias/>
+    </section>
   </div>
 </template>
 /*  lembrar de fazer um component btn pra descer pra outra tela la, e duplicar aq  */
    <script>
-import ProjetosGanhadores from './ProjetosGanhadores.vue';
+import CursosECategorias from '../components/CursosECategorias.vue';
+import ProjetosGanhadores from '../components/ProjetosGanhadores.vue';
 
 export default {
     data() {
@@ -61,7 +65,7 @@ export default {
             ],
         };
     },
-    components: { ProjetosGanhadores }
+    components: { ProjetosGanhadores, CursosECategorias }
 };
 </script>
    
@@ -92,7 +96,6 @@ body {
 
 img {
   
-  max-width: 100%; 
   width: 50%;
 }
 

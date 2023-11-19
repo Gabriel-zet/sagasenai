@@ -6,7 +6,7 @@
      <router-link to="/login"> - Login</router-link>
      <router-view/>
      
-     <h1>Rodapé</h1>
+     <h4>DSPI - SENAI AL SERVIÇO NACIONAL DE APRENDIZAGEM INDUSTRIAL - DEPARTAMENTO REGIONAL DE ALAGOAS</h4>
   </div>
  </template>
  

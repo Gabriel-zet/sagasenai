@@ -1,24 +1,36 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import CardCadastrar from "../components/CardCadastrar.vue"
-import CardLogin from "../components/CardLogin.vue"
-import CursosECategorias from "../views/CursosECategorias.vue"
+import CadastroUser from "../views/CadastroUser.vue"
+import CursosECategorias from "../components/CursosECategorias.vue"
 import HomeView from "../views/HomeView"
+import CadastroAdmin from "../views/CadastroAdmin.vue"
+import LoginAdmin from "../views/LoginAdmin"
+import LoginUser from "../views/LoginUser.vue"
 
 const routes = [
   {
     path: '/cadastrar',
     name: 'Cadastrar',
-    component: CardCadastrar,
+    component: CadastroUser,
   },
   {
     path: '/login',
     name: 'Login',
-    component: CardLogin,
+    component: LoginUser,
   },
   {
     path: '/home',
     name: 'Home',
     component: HomeView,
+  },
+  {
+    path: '/CadastrarAdmin',
+    name: 'CadastrarAdm',
+    component: CadastroAdmin
+  },
+  {
+    path: '/LoginAdmin',
+    name: 'LoginAdm',
+    component: LoginAdmin
   },
   {
     path: '/teste',
