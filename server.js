@@ -39,8 +39,6 @@ app.post('/users/create', (req, res) => {
         if (!user) {
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(password, salt);
-
-            // Salvar usuário incluindo o campo instituto
             return knex('users').insert({
                 email: email,
                 password: hash,

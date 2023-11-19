@@ -1,10 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import CadastroUser from "../views/CadastroUser.vue"
-import CursosECategorias from "../components/CursosECategorias.vue"
 import HomeView from "../views/HomeView"
 import CadastroAdmin from "../views/CadastroAdmin.vue"
 import LoginAdmin from "../views/LoginAdmin"
 import LoginUser from "../views/LoginUser.vue"
+import CategoriasPost from "../views/admin/CategoriasPost"
+import ListagemPost from "../views/admin/ListagemPost"
+import PublicarPost from "../views/admin/PublicarPost"
+import adminAuth from 'middlewares/adminAuth'
 
 const routes = [
   {
@@ -33,10 +36,24 @@ const routes = [
     component: LoginAdmin
   },
   {
-    path: '/teste',
-    name: 'teste',
-    component: CursosECategorias
+    path: '/AdmCategorias',
+    name: 'AdmCategorias',
+    component: CategoriasPost,
+    beforeEnter: adminAuth
   },
+  {
+    path: '/AdmListagem',
+    name: 'AdmListagem',
+    component: ListagemPost,
+    beforeEnter: adminAuth
+  },
+  {
+    path: '/AdmPublicar',
+    name: 'AdmPublicar',
+    component: PublicarPost,
+    beforeEnter: adminAuth
+  },
+
 ]
 
 const router = createRouter({
