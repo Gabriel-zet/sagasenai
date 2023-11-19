@@ -2,15 +2,16 @@
   <div id="app">
      <h1>{{ message }}</h1>
      <router-link to="/cadastrar">Cadastrar</router-link>
-     <router-link to="/"> - Home</router-link>
+     <router-link to="/home"> - Home</router-link>
      <router-link to="/login"> - Login</router-link>
      <router-view/>
-     <h1>fim rota</h1>
+     
+     <h1>Rodapé</h1>
   </div>
  </template>
  
  <script>
- 
+
  export default {
   data() {
      return {
@@ -33,6 +34,7 @@
      }
   },
   components: {
+
   },
  };
  </script>
