@@ -7,7 +7,8 @@ import LoginUser from "../views/LoginUser.vue"
 import CategoriasPost from "../views/admin/CategoriasPost"
 import ListagemPost from "../views/admin/ListagemPost"
 import PublicarPost from "../views/admin/PublicarPost"
-import adminAuth from 'middlewares/adminAuth'
+import adminAuth from '../middlewares/adminAuth'
+import UnauThorized from '../views/UnauThorized.vue'
 
 const routes = [
   {
@@ -39,7 +40,7 @@ const routes = [
     path: '/AdmCategorias',
     name: 'AdmCategorias',
     component: CategoriasPost,
-    beforeEnter: adminAuth
+    
   },
   {
     path: '/AdmListagem',
@@ -48,11 +49,17 @@ const routes = [
     beforeEnter: adminAuth
   },
   {
-    path: '/AdmPublicar',
+    path: '/AdmPost',
     name: 'AdmPublicar',
     component: PublicarPost,
     beforeEnter: adminAuth
   },
+  {
+    path: '/unauThorized',
+    name: 'UnauThorized',
+    component: UnauThorized,
+  },
+  
 
 ]
 
