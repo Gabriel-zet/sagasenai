@@ -9,6 +9,7 @@ import ListagemPost from "../views/admin/ListagemPost"
 import PublicarPost from "../views/admin/PublicarPost"
 import adminAuth from '../middlewares/adminAuth'
 import UnauThorized from '../views/UnauThorized.vue'
+import CardPub from '../components/CardPub.vue'
 
 const routes = [
   {
@@ -52,13 +53,18 @@ const routes = [
     path: '/AdmPost',
     name: 'AdmPublicar',
     component: PublicarPost,
-    beforeEnter: adminAuth
+    
   },
   {
     path: '/unauThorized',
     name: 'UnauThorized',
     component: UnauThorized,
   },
+  {
+    path: '/teste',
+    name: 'CardPub',
+    component: CardPub
+  }
   
 
 ]

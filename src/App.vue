@@ -8,7 +8,6 @@
      <router-link to="/AdmListagem"> - Post</router-link>
      <router-link to="/AdmPost"> - PublicarPost</router-link>
      <router-view/>
-     
      <h4>DSPI - SENAI AL SERVIÇO NACIONAL DE APRENDIZAGEM INDUSTRIAL - DEPARTAMENTO REGIONAL DE ALAGOAS</h4>
   </div>
  </template>
@@ -37,8 +36,7 @@
      }
   },
   components: {
-
-  },
+},
  };
  </script>
  

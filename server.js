@@ -213,6 +213,63 @@ app.get("/admin/listarCategorias", (req, res) => {
         });
 });
 
+app.post("/admin/criarPost", (req, res) => {
+    var title = req.body.title;
+    var video = req.body.video;
+    var data = req.body.data;
+    var descricao = req.body.descricao;
+    var instituicao = req.body.instituicao;
+    var categoria = req.body.categoria;
+    var ganhador = req.body.ganhador;
+    var votos = req.body.votos;
+
+    // Verificar se o post já existe pelo título
+    knex('posts')
+        .where({ title: title })
+        .first()
+        .then(existingPost => {
+            if (existingPost) {
+                return res.status(400).json({ error: 'Já existe um post com este título.' });
+            } else {
+                return knex('posts')
+                    .insert({
+                        title: title,
+                        video: video,
+                        data: data,
+                        descricao: descricao,
+                        instituicao: instituicao,
+                        categoria: categoria,
+                        ganhador: ganhador,
+                        votos: votos
+                    })
+                    .returning('*'); 
+            }
+        })
+        .then(newPost => {
+            res.status(201).json({ message: 'Post criado com sucesso', post: newPost[0] });
+        })
+        .catch(error => {
+            console.error('Erro ao criar post:', error);
+            res.status(500).json({ error: 'Erro interno do servidor ao criar post.' });
+        });
+});
+
+
+app.get("/admin/listarPosts", (req, res) => {
+    knex('posts')
+      .select('*') 
+      .then(posts => {
+        res.status(200).json({ posts });
+      })
+      .catch(error => {
+        console.error('Erro ao listar posts:', error);
+        res.status(500).json({ error: 'Erro interno do servidor ao listar posts.' });
+      });
+  });
+  
+
+
 app.listen(12345, () => {
     console.log("API RODANDO!");
 });
+
