@@ -1,17 +1,19 @@
 <template>
-  <section>
-    <h2>SELECIONE O CURSO E CONHEÇA OS PROJETOS DA MOSTRA</h2>
-    <div class="card-grid">
-      <CardProjetos
-        v-for="(card, index) in cards"
-        :key="index"
-        :title="card.title"
-        :content="card.conteudo"
-      />
-      <img src="../assets/fotop3.jpg" alt="" />
+  <div class='boxCenter'>
+    <div class="CardGrid">
+      <h2>SELECIONE O CURSO E CONHEÇA OS PROJETOS DA MOSTRA</h2>
+      <div class="card-section cards">
+        <CardProjetos
+          v-for="(card, index) in cards"
+          :key="index"
+          :title="card.title"
+          :content="card.conteudo"
+        />
+        <img src="../assets/fotop3.jpg" alt="" />
+      </div>
     </div>
-  </section>
-  <section>
+  </div>
+  <div>
     <h2>Categorias</h2>
     <CardProjetos
       v-for="(categoria, index) in categorias"
@@ -19,7 +21,7 @@
       :title="categoria.title"
       :content="categoria.conteudo"
     />
-  </section>
+  </div>
 </template>
 
 <script>
@@ -56,10 +58,22 @@ export default {
 </script>
 
 <style scoped>
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 20px;
-  padding: 20px;
+
+@media (min-width: 1500px){
+  .card-section{
+    grid-template-columns: 480px 480px 480px !important;
+  }
+}
+
+
+
+.card-section{
+    justify-content: center;
+    gap: 30px;
+    padding: 0 20px;
+    display: grid;
+    --auto-grid-min-size: 44vw;
+    grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
+    grid-gap: 1rem;
 }
 </style>

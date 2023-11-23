@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <!-- <div id="app">
      <h1>{{ title }}</h1>
      <button>VER TODOS</button>
      <h2>{{ subTitle }}</h2>
@@ -8,14 +8,32 @@
        <h2>{{ project.name }}</h2>
        <p>{{ project.description }}</p>
      </div>
+  </div> -->
+
+
+  <div id="app">
+    <section id='Winner-Slider' class='sect-i'>
+      <div class="Content-Slider">
+        <div class="Title-Slider">
+          <h1>{{ title }}</h1>
+          <span></span>
+          <button>VER TODOS</button>
+        </div>
+
+        <div class="Slider-List project" v-for="project in projects" :key="project.id">
+          <h2>{{ project.name }}</h2>
+          <p>{{ project.description }}</p>
+        </div>
+      </div>
+    </section>
   </div>
- </template>
+</template>
  
  <script>
  export default {
   data() {
      return {
-       title: "Projetos Ganadores",
+       title: "Projetos Ganhadores",
        subTitle: "DESAFIO SENAI DE PROJETOS INTEGRADORES - SENAI AL",
        projects: [
          { id: 1, name: "Projeto A", description: "Descrição do Projeto A" },

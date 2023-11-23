@@ -14,14 +14,21 @@ export default {
 };
 </script>
    
-   <style scoped>
+<style scoped>
+
 .card {
-  background-color: #f1f1f1;
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin: 10px;
-  text-align: center;
-  width: 100%;
-  max-width: 300px;
+  display: flex;
+  padding: 34px 32px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 69px;
+  flex-shrink: 0;
+
+  border: 1px solid #D2672B;
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(2px);
 }
+
+
+
 </style>
