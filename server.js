@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
 const cors = require('cors');
-const knex = require("./database/database")
+const knex = require("./database/database");
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const adminAuth = require('./src/middlewares/adminAuth'); // Importe o middleware adminAuth
+const jwt = require('jsonwebtoken');
+const verificarToken = require('./middlewares/verificarToken'); // Importe o middleware
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -12,10 +13,10 @@ app.use(session({
     secret: 'chave-secreta-unicA$1@3',
     resave: false,
     saveUninitialized: true,
+    cookie: { maxAge: 30000000 }
 }));
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.static('public'));
-;  // Certifique-se de que adminAuth vem após a configuração do middleware de sessão.
 
 
 app.get('/data', (req, res) => {
@@ -57,7 +58,7 @@ app.post('/users/create', (req, res) => {
     });
 });
 
-app.post('/admin/create', (req, res) => {
+app.post('/admin/create', verificarToken, (req, res) => {
 
     var email = req.body.email;
     var password = req.body.password;
@@ -82,71 +83,59 @@ app.post('/admin/create', (req, res) => {
         console.error(err);
     });
 });
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
 
-app.post("/login", (req, res) => {
-    var email = req.body.email;
-    var password = req.body.password;
+    try {
+        const user = await knex('users').where({ email }).first();
 
-    knex('users')
-        .where({ email: email })
-        .first()
-        .then(user => {
-            if (user) {
-                const correct = bcrypt.compareSync(password, user.password);
+        if (user && bcrypt.compareSync(password, user.password)) {
+            console.log('Usuário autenticado:', user);
+            req.session.user = {
+                id: user.id,
+                email: user.email,
+            };
 
-                if (correct) {
-                    req.session.user = {
-                        id: user.id,
-                        email: user.email
-                    };
-                    res.json({ message: 'Login bem-sucedido!' });
-                } else {
-                    res.status(401).json({ message: 'Senha incorreta' });
-                }
-            } else {
-                res.status(404).json({ message: 'Usuário não encontrado' });
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao consultar o banco de dados:', error);
-            res.status(500).json({ message: 'Erro interno no servidor' });
-        });
+            res.json({
+                message: 'Login bem-sucedido!',
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    
+                },
+            });
+        } else {
+            res.status(401).json({ message: 'Credenciais inválidas' });
+        }
+    } catch (error) {
+        console.error('Erro ao autenticar:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
 });
 
-app.post("/admin/login", (req, res) => {
-    var email = req.body.email;
-    var password = req.body.password;
+app.post('/admin/login', async (req, res) => {
+    const { email, password } = req.body;
 
-    knex('admin')
-        .where({ email: email })
-        .first()
-        .then(adm => {
-            if (adm) {
-                const correct = bcrypt.compareSync(password, adm.password);
+    try {
+        const admin = await knex('admin').where({ email }).first();
 
-                if (correct) {
-                    req.session.adm = {
-                        id: adm.id,
-                        email: adm.email,
-                        isAdmin: true,
-                    };
-                    res.json({ message: 'Login bem-sucedido!', isAdmin: true });
-                } else {
-                    res.status(401).json({ message: 'Senha incorreta' });
-                }
-            } else {
-                res.status(404).json({ message: 'Usuário não encontrado' });
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao consultar o banco de dados:', error);
-            res.status(500).json({ message: 'Erro interno no servidor' });
-        });
+        if (admin && bcrypt.compareSync(password, admin.password)) {
+            req.session.admin = {
+                id: admin.id,
+                email: admin.email,
+            };
+            res.json({ message: 'Login bem-sucedido!' });
+        } else {
+            res.status(401).json({ message: 'Credenciais inválidas' });
+        }
+    } catch (error) {
+        console.error('Erro ao autenticar:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
 });
 
 
-
-app.post("/admin/criarCategoria", (req, res) => {
+app.post("/admin/criarCategoria", verificarToken, (req, res) => {
     const categoria = req.body.categoria;
 
     knex('categorias')
@@ -173,7 +162,7 @@ app.post("/admin/criarCategoria", (req, res) => {
         });
 });
 
-app.post("/admin/deletarCategoria", (req, res) => {
+app.post("/admin/deletarCategoria", verificarToken, (req, res) => {
     const categoria = req.body.categoria;
 
     knex('categorias')
@@ -201,9 +190,9 @@ app.post("/admin/deletarCategoria", (req, res) => {
         });
 });
 
-app.get("/admin/listarCategorias", (req, res) => {
+app.get("/admin/listarCategorias", verificarToken, (req, res) => {
     knex('categorias')
-        .select('nome')  
+        .select('nome')
         .then(categorias => {
             res.status(200).json({ categorias });
         })
@@ -213,7 +202,7 @@ app.get("/admin/listarCategorias", (req, res) => {
         });
 });
 
-app.post("/admin/criarPost", (req, res) => {
+app.post("/admin/criarPost", verificarToken, (req, res) => {
     var title = req.body.title;
     var video = req.body.video;
     var data = req.body.data;
@@ -223,7 +212,6 @@ app.post("/admin/criarPost", (req, res) => {
     var ganhador = req.body.ganhador;
     var votos = req.body.votos;
 
-    // Verificar se o post já existe pelo título
     knex('posts')
         .where({ title: title })
         .first()
@@ -242,7 +230,7 @@ app.post("/admin/criarPost", (req, res) => {
                         ganhador: ganhador,
                         votos: votos
                     })
-                    .returning('*'); 
+                    .returning('*');
             }
         })
         .then(newPost => {
@@ -255,19 +243,22 @@ app.post("/admin/criarPost", (req, res) => {
 });
 
 
-app.get("/admin/listarPosts", (req, res) => {
+app.get("/admin/listarPosts", verificarToken, (req, res) => {
     knex('posts')
-      .select('*') 
-      .then(posts => {
-        res.status(200).json({ posts });
-      })
-      .catch(error => {
-        console.error('Erro ao listar posts:', error);
-        res.status(500).json({ error: 'Erro interno do servidor ao listar posts.' });
-      });
-  });
-  
+        .select('*')
+        .then(posts => {
+            res.status(200).json({ posts });
+        })
+        .catch(error => {
+            console.error('Erro ao listar posts:', error);
+            res.status(500).json({ error: 'Erro interno do servidor ao listar posts.' });
+        });
+});
 
+app.get("/logout", (req, res) => {
+    req.session.user = undefined
+    res.redirect("/")
+})
 
 app.listen(12345, () => {
     console.log("API RODANDO!");

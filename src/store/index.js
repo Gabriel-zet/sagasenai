@@ -1,4 +1,6 @@
+// store/index.js
 import { createStore } from 'vuex';
+import userModule from './user';
 
 export default createStore({
   state: {
@@ -14,5 +16,7 @@ export default createStore({
   getters: {
     isAdmin: state => state.user.isAdmin,
   },
-  // ... outras configurações do Vuex
+  modules: {
+    user: userModule,
+  },
 });

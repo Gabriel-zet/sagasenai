@@ -38,6 +38,7 @@ export default {
         .post("http://localhost:12345/admin/login", dadosDoFormulario)
         .then((response) => {
           console.log("Login bem-sucedido!", response.data);
+          localStorage.setItem("token", response.data.token);
           this.$store.commit("setAdminStatus", response.data.isAdmin);
           this.$nextTick(() => {
             this.$router.push("/admListagem");
