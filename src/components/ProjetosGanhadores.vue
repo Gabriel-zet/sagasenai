@@ -12,11 +12,10 @@
 
 
   <div id="app">
-    <section id='Winner-Slider' class='sect-i'>
+    <section id='Winner-Slider' class='sect-i Center'>
       <div class="Content-Slider">
-        <div class="Title-Slider">
+        <div class="Title-Slider"  v-bind:style="{ backgroundImage: 'url(/WinnerLine.svg)' }">
           <h1>{{ title }}</h1>
-          <span></span>
           <button>VER TODOS</button>
         </div>
 
@@ -54,13 +53,12 @@
 
   text-align: center;
  }
- 
- .project {
-  background-color: #f7f7f7;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 5px;
- }
- 
+
+.project {
+    background-color: #f7f7f7;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
 
  </style>

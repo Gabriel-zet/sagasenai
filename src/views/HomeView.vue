@@ -1,7 +1,11 @@
 <template>
   <div id="app">
+    <header className="Header-top">
+      <MainNavbar />     
+    </header>
+
     <main>
-      <section id='Home-Banner' class='sect-w'>
+      <section id='Home-Banner' v-bind:style="{ backgroundImage: 'url(/BannerDspi.jpg)' }" class='sect-w'>
         <div class="Wellcome-Banner">
           <h1>{{ title }}</h1>
           <br />
@@ -9,33 +13,35 @@
           <button class='Elect-Button'>
             <div class="content-button">
                 <span class='Text-Button'>ELEGER PROJETOS</span>
-                <span class='Icon-Elect'></span>
+                <img src="/arrow-right.svg" alt="">
             </div>
           </button>
         </div>
       </section>
 
-      <section id='Sobre-Banner'  class='sect-w flex-flow'>
-          <div class="Box-space left">
-          </div>
-          <div class="Box-cotent right">
-            <div class="Content-Sobre">
-              <div class="Title-Sobre">
-                <p>PROJETOS INTEGRADORES</p>
-                <h1>Mostra Virtual de Projetos de Inovação do SENAI AL</h1>
-                <br />
-              </div>
-              
-              <div class="Text-Sobre">
-                <p>{{ textP2 }}</p>
-              </div>
-
-              <button class='Elect-Button'>
-                <div class="content-button">
-                    <span class='Text-Button'>ELEGER PROJETOS</span>
-                    <span class='Icon-Elect'></span>
+      <section id='Sobre-Banner' v-bind:style="{ backgroundImage: 'url(/BannerSobre.jpg)' }" class='sect-w'>
+          <div class="flex-flow Center">
+            <div class="Box-space left">
+            </div>
+            <div class="Box-cotent right">
+              <div class="Content-Sobre">
+                <div class="Title-Sobre">
+                  <p>PROJETOS INTEGRADORES</p>
+                  <h1>Mostra Virtual de Projetos de Inovação do SENAI AL</h1>
+                  <br />
                 </div>
-              </button>
+                
+                <div class="Text-Sobre">
+                  <p>{{ textP2 }}</p>
+                </div>
+
+                <button class='Elect-Button'>
+                  <div class="content-button">
+                      <span class='Text-Button'>ELEGER PROJETOS</span>
+                      <img src="/arrow-right.svg" alt="">
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
       </section>
@@ -71,7 +77,7 @@
 
             <div class="Box-Image right">
               <div class="image-right">
-                <img src="/fotop3.jpg" alt="">
+                <div class="texs" v-bind:style="{ backgroundImage: 'url(/fotop3.jpg)' }"></div>
               </div>
             </div>
           </div>
@@ -92,6 +98,7 @@
    <script>
 import CursosECategorias from '../components/CursosECategorias.vue';
 import ProjetosGanhadores from '../components/ProjetosGanhadores.vue';
+import MainNavbar from '../components/MainNavbar.vue';
 
 export default {
     data() {
@@ -111,11 +118,23 @@ export default {
             ],
         };
     },
-    components: { ProjetosGanhadores, CursosECategorias }
+    components: { ProjetosGanhadores, CursosECategorias, MainNavbar }
 };
 </script>
    
 <style>
+
+.Header-top {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    background: linear-gradient(180deg, var(--Magno-Finish) 0%, rgba(0, 0, 0, 0.00) 100%);
+    z-index: 100;
+    font-family: var(--Font-Mono-Regular);
+}
 
 :root {
   line-height: 1.5;
@@ -143,9 +162,10 @@ export default {
   -webkit-text-size-adjust: 100%;
 }
 
-.flex-flow{
-  flex-flow: row wrap;
-  width: 100%;
+.flex-flow {
+    flex-flow: row wrap;
+    width: 100%;
+    display: flex;
 }
 
 .left {
@@ -181,6 +201,10 @@ h2 {
 
 h3{
   font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1.0em;
 }
 
 p{
@@ -252,11 +276,8 @@ body{
     margin: 0 auto;
 }
 
-.project {
-  background-color: #f7f7f7;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 5px;
+.Question-Box {
+    margin-bottom: 20vw;
 }
 
 .text {
@@ -276,9 +297,8 @@ body{
 /* HOME BANNER */
 
 #Home-Banner {
-  background-color: royalblue;
-  position: relative;
-  background-image: url('@/assets/teste.png');
+    position: relative;
+    background: center center / cover no-repeat;
 }
 
 
@@ -290,18 +310,18 @@ main{
 }
 
 .Wellcome-Banner {
-  position: absolute;
-  text-align: center;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 1200px;
-  width: 65%;
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 1200px;
+    width: 50%;
 }
 
 .Wellcome-Banner h1 {
-  font-family: var(--Font-Mono-SemiBold);
-  font-size: 5.5em;
+    font-family: var(--Font-Mono-SemiBold);
+    font-size: 4.2em;
 }
 
 .Wellcome-Banner p {
@@ -333,9 +353,9 @@ main{
 /* SOBRE BANNER */
 
 #Sobre-Banner {
-    background-color: rebeccapurple;
     position: relative;
     display: flex;
+    background: center center / cover no-repeat;
     align-items: center;
 }
 
@@ -411,36 +431,44 @@ main{
     padding: 0 30px 0 0;
 }
 
-.Box-Image img {
+.texs {
     width: 100%;
     object-fit: cover;
-    height: inherit;
+    height: 1075px;
     display: block;
     margin: 0 auto;
+    background: center center / cover no-repeat;
 }
 
 /* WINNER */
 
-#Winner-Slider{
+#Section-Ganhadores {
     background-color: var(--Magno-Finish);
 }
 
-.Title-Slider {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin: 0  0 140px;
-}
-
-.Title-Slider span {
-    width: 58%;
-    height: 0.01em;
-    background: aqua;
+.Title-Slider button {
+    border: 1px solid var(--Ermine-White);
+    cursor: pointer;
+    outline: 15px solid var(--Magno-Finish);
+    background: var(--Magno-Finish);
+    transition: border-color 0.25s;
+    border-radius: 30px;
+    padding: 16px 31px;
 }
 
 .Title-Slider h1 {
     font-family: 'Founders Grotesk';
     margin-top: var(--Font-Founders);
+    background: var(--Magno-Finish);
+    padding: 0 16px 17px 0;
+}
+
+.Title-Slider {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0  0 140px;
+    background: center center / cover no-repeat;
 }
 
 /* BUTTON */
@@ -448,9 +476,8 @@ main{
 .Elect-Button {
     background: rgba(255, 255, 255, 0.10);
     backdrop-filter: blur(2px);
-    /* width: 23%; */
-    border-radius: 5vw;
-    padding: 0.5vw 0.1vw;
+    border-radius: 50px;
+    padding: 0.8em 0.2em;
     max-width: 80vw;
     margin: 34px 0;
 }
@@ -486,13 +513,90 @@ main{
 }
 
 .CardGrid h2 {
-    margin: 64px 0;
+    margin: 64px 40px;
 }
 
 
-@media (max-width: 1023px) {
+@media (max-width: 1200px) {
   .left, .right {
-        width: 100%;
+    width: 100%;
+  }
+
+  .image-right {
+    padding: 60px 30px;
+  }
+
+  .Content-Sobre {
+    padding: 100px 30px;
+  }
+
+  #Home-Banner {
+    padding: 500px 0;
+  }
+
+  .sect-w {
+    height: auto;
+  }
+
+  /* .sect-i {
+    padding: 100px 0 0;
+  } */
+
+  .Wellcome-Banner {
+    width: 90%;
+  }
+
+  .texs {
+    height: 705px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 2.5em !important;
+    }
+
+    h2 {
+        font-size: 1.8em !important;
+    }
+
+    h3 {
+        font-size: 1.0em !important;
+    }
+
+    p {
+        font-size: 1.1em !important;
+    }
+
+    h4 {
+        font-size: 0.9em;
+    }
+
+    #Home-Banner {
+      padding: 400px 0;
     }
 }
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 2.0em !important;
+    }
+
+    h2 {
+        font-size: 1.5em !important;
+    }
+
+    h3 {
+        font-size: 0.9em !important;
+    }
+
+    p {
+        font-size: 1.0em !important;
+    }
+
+    h4 {
+        font-size: 0.8em;
+    }
+}
+
 </style>
