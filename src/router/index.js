@@ -7,17 +7,15 @@ import LoginUser from "../views/LoginUser.vue"
 import CategoriasPost from "../views/admin/CategoriasPost"
 import ListagemPost from "../views/admin/ListagemPost"
 import PublicarPost from "../views/admin/PublicarPost"
-import CardPub from '../components/CardPub.vue'
+import ProjetoView from "../views/ProjetoView"
 import UserProfile from '../views/UserProfile.vue'
 import store from '../store';
 
 
 const isAdmin = () => {
   const user = store.getters['user/getUser'];
-  console.log(user && user.isAuthenticated !== undefined && user.isAdmin !== undefined);
   return user && user.isAuthenticated === true && user.isAdmin === true;
 };
-
 const routes = [
   {
     path: '/', redirect: '/home'
@@ -105,8 +103,8 @@ const routes = [
   },
   {
     path: '/teste',
-    name: 'CardPub',
-    component: CardPub
+    name: 'teste',
+    component: ProjetoView
   },
 
   {

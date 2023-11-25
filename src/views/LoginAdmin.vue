@@ -40,7 +40,11 @@ export default {
           console.log("Login bem-sucedido!", response.data);
           document.cookie = `token=${response.data.token}; path=/`;
           document.cookie = `loggedIn=true; path=/`;
-          this.$store.commit("user/setUser", response.data.user);
+          this.$store.commit("user/setUser", {
+            ...response.data.user,
+            isAuthenticated: true,
+            isAdmin: response.data.isAdmin
+          });
           this.$store.commit("setAdminStatus", response.data.isAdmin);
           console.log("Redirecionando para /AdmListagem");
           this.$router.push({ name: "AdmListagem" });

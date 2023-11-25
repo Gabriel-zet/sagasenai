@@ -88,31 +88,28 @@ app.post('/admin/create', verificarToken, (req, res) => {
 });
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
+  
     try {
-        const user = await knex('users').where({ email }).first();
-
-        if (user && bcrypt.compareSync(password, user.password)) {
-            console.log('Usuário autenticado:', user);
-            req.session.user = {
-                id: user.id,
-                email: user.email,
-            };
-
-            res.json({
-                message: 'Login bem-sucedido!',
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    
-                },
-            });
-        } else {
-            res.status(401).json({ message: 'Credenciais inválidas' });
-        }
+      const user = await knex('users').where({ email }).first();
+  
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+  
+        res.json({
+          message: 'Login bem-sucedido!',
+          isAdmin: false,
+          token: token,
+          user: {
+            id: user.id,
+            email: user.email,
+          }
+        });
+      } else {
+        res.status(401).json({ message: 'Credenciais inválidas' });
+      }
     } catch (error) {
-        console.error('Erro ao autenticar:', error);
-        res.status(500).json({ message: 'Erro interno no servidor' });
+      console.error('Erro ao autenticar:', error);
+      res.status(500).json({ message: 'Erro interno no servidor' });
     }
 });
 
@@ -252,7 +249,7 @@ app.post("/admin/criarPost", verificarToken, (req, res) => {
 });
 
 
-app.get("/admin/listarPosts", verificarToken, (req, res) => {
+app.get("/admin/listarPosts", (req, res) => {
     knex('posts')
         .select('*')
         .then(posts => {

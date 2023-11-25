@@ -40,7 +40,11 @@ export default {
         .then((response) => {
           console.log("Login bem-sucedido!", response.data);
 
-          this.$store.commit("user/setUser", response.data.user);
+          this.$store.commit("user/setUser", {
+            ...response.data.user,
+            isAuthenticated: true,
+            isAdmin: response.data.isAdmin
+          });
 
           this.$router.push("/UserProfile");
         })
