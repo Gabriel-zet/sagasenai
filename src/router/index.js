@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import CadastroUser from "../views/CadastroUser.vue"
 import HomeView from "../views/HomeView"
 import CadastroAdmin from "../views/CadastroAdmin.vue"
-// eslint-disable-next-line
 import LoginAdmin from "../views/LoginAdmin"
 import LoginUser from "../views/LoginUser.vue"
 import CategoriasPost from "../views/admin/CategoriasPost"
@@ -12,9 +11,11 @@ import CardPub from '../components/CardPub.vue'
 import UserProfile from '../views/UserProfile.vue'
 import store from '../store';
 
+
 const isAdmin = () => {
-  const user = store.state.user;
-  return user.isAuthenticated && user.isAdmin;
+  const user = store.getters['user/getUser'];
+  console.log(user && user.isAuthenticated !== undefined && user.isAdmin !== undefined);
+  return user && user.isAuthenticated === true && user.isAdmin === true;
 };
 
 const routes = [
@@ -47,11 +48,12 @@ const routes = [
     name: 'CadastrarAdm',
     component: CadastroAdmin,
     beforeEnter: (to, from, next) => {
+      console.log('Guard de AdmListagem:', store.state.user);
       if (isAdmin()) {
-        // Permite o acesso para usuários autenticados como administradores
+        console.log('Permitido');
         next();
       } else {
-        // Redireciona para a página de login se não estiver autenticado ou não for administrador
+        console.log('Redirecionando para LoginAdm');
         next({ name: 'LoginAdm' });
       }
     },
@@ -61,9 +63,12 @@ const routes = [
     name: 'AdmCategorias',
     component: CategoriasPost,
     beforeEnter: (to, from, next) => {
+      console.log('Guard de AdmListagem:', store.state.user);
       if (isAdmin()) {
+        console.log('Permitido');
         next();
       } else {
+        console.log('Redirecionando para LoginAdm');
         next({ name: 'LoginAdm' });
       }
     },
@@ -73,9 +78,12 @@ const routes = [
     name: 'AdmListagem',
     component: ListagemPost,
     beforeEnter: (to, from, next) => {
+      console.log('Guard de AdmListagem:', store.state.user);
       if (isAdmin()) {
+        console.log('Permitido');
         next();
       } else {
+        console.log('Redirecionando para LoginAdm');
         next({ name: 'LoginAdm' });
       }
     },
@@ -85,9 +93,12 @@ const routes = [
     name: 'AdmPublicar',
     component: PublicarPost,
     beforeEnter: (to, from, next) => {
+      console.log('Guard de AdmListagem:', store.state.user);
       if (isAdmin()) {
+        console.log('Permitido');
         next();
       } else {
+        console.log('Redirecionando para LoginAdm');
         next({ name: 'LoginAdm' });
       }
     },
@@ -97,12 +108,13 @@ const routes = [
     name: 'CardPub',
     component: CardPub
   },
+
   {
     path: '/LoginAdm',
-    name: 'admLogin',
-    component: 'LoginAdmin',
+    name: 'LoginAdm',
+    component: LoginAdmin,
   },
-  
+
 
 ]
 

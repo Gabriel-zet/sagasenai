@@ -1,20 +1,18 @@
-// store/index.js
 import { createStore } from 'vuex';
 import userModule from './user';
 
 export default createStore({
   state: {
-    user: {
-      isAdmin: false,
-    },
+    user: null,
+    isAdmin: false,
   },
   mutations: {
     setAdminStatus(state, isAdmin) {
-      state.user.isAdmin = isAdmin;
+      state.isAdmin = isAdmin;
     },
   },
   getters: {
-    isAdmin: state => state.user.isAdmin,
+    isAdmin: state => state.isAdmin,
   },
   modules: {
     user: userModule,

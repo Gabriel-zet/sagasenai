@@ -7,6 +7,9 @@ const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const verificarToken = require('./middlewares/verificarToken'); // Importe o middleware
 
+
+const jwtSecret = 'suaChaveSecretaJWT';
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
@@ -115,24 +118,30 @@ app.post('/login', async (req, res) => {
 
 app.post('/admin/login', async (req, res) => {
     const { email, password } = req.body;
-
+  
     try {
-        const admin = await knex('admin').where({ email }).first();
-
-        if (admin && bcrypt.compareSync(password, admin.password)) {
-            req.session.admin = {
-                id: admin.id,
-                email: admin.email,
-            };
-            res.json({ message: 'Login bem-sucedido!' });
-        } else {
-            res.status(401).json({ message: 'Credenciais inválidas' });
-        }
+      const admin = await knex('admin').where({ email }).first();
+  
+      if (admin && bcrypt.compareSync(password, admin.password)) {
+        const token = jwt.sign({ adminId: admin.id }, jwtSecret, { expiresIn: '1h' });
+  
+        res.json({
+          message: 'Login bem-sucedido!',
+          isAdmin: true,
+          token: token,
+          user: {
+            id: admin.id,
+            email: admin.email,
+          }
+        });
+      } else {
+        res.status(401).json({ message: 'Credenciais inválidas' });
+      }
     } catch (error) {
-        console.error('Erro ao autenticar:', error);
-        res.status(500).json({ message: 'Erro interno no servidor' });
+      console.error('Erro ao autenticar:', error);
+      res.status(500).json({ message: 'Erro interno no servidor' });
     }
-});
+  });
 
 
 app.post("/admin/criarCategoria", verificarToken, (req, res) => {
@@ -190,7 +199,7 @@ app.post("/admin/deletarCategoria", verificarToken, (req, res) => {
         });
 });
 
-app.get("/admin/listarCategorias", verificarToken, (req, res) => {
+app.get("/admin/listarCategorias", (req, res) => {
     knex('categorias')
         .select('nome')
         .then(categorias => {

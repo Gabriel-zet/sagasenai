@@ -1,13 +1,13 @@
 <template>
     <div class="card-footer">
-      <h4>{{ title }}</h4>
+      <h4>{{ nome }}</h4>
     </div>
 </template>
      
 <script>
   export default {
     props: {
-      title: String,
+      nome: String,
     },
   };
 </script>

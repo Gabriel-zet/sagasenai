@@ -1,18 +1,14 @@
-// store/user.js
 export default {
-    state: {
-      user: null,
+  namespaced: true,
+  state: {
+    user: null,
+  },
+  mutations: {
+    setUser(state, user) {
+      state.user = user;
     },
-    mutations: {
-      setUser(state, user) {
-        state.user = user;
-      },
-    },
-    actions: {
-
-    },
-    getters: {
-      getUser: (state) => state.user,
-    },
-  };
-  
+  },
+  getters: {
+    getUser: state => state.user,
+  },
+};

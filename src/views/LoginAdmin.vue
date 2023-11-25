@@ -15,8 +15,8 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import axios from "axios";
 export default {
   data() {
@@ -38,11 +38,12 @@ export default {
         .post("http://localhost:12345/admin/login", dadosDoFormulario)
         .then((response) => {
           console.log("Login bem-sucedido!", response.data);
-          localStorage.setItem("token", response.data.token);
+          document.cookie = `token=${response.data.token}; path=/`;
+          document.cookie = `loggedIn=true; path=/`;
+          this.$store.commit("user/setUser", response.data.user);
           this.$store.commit("setAdminStatus", response.data.isAdmin);
-          this.$nextTick(() => {
-            this.$router.push("/admListagem");
-          });
+          console.log("Redirecionando para /AdmListagem");
+          this.$router.push({ name: "AdmListagem" });
         })
         .catch((error) => {
           console.error("Erro durante o login:", error.response.data);
