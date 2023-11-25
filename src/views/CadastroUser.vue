@@ -1,6 +1,6 @@
 <template>
   <div id="body">
-    <div id="container">
+    <!-- <div id="container">
       <form method="post" @submit.prevent="enviarFormulario">
         <div id="Nome">
           <label for="nome">Nome</label>
@@ -29,6 +29,97 @@
         <button id="submit" type="submit">Cadastrar</button>
       </form>
     </div>
+  </div> -->
+    <div class="wrapper Cadastrar-Form">
+      <div
+        class="sct brand"
+        v-bind:style="{ backgroundImage: 'url(/BannerHome.jpg)' }"
+      ></div>
+
+      <div class="sct login">
+        <form method="post" @submit.prevent="enviarFormulario">
+          <h3>Cadastrar</h3>
+          <label for="nome"> Nome </label>
+          <div id="Nome">
+            <input
+              v-bind:style="{ backgroundImage: 'url(/Perfil.svg)' }"
+              type="text"
+              v-model="dadosDoFormulario.nome"
+            />
+          </div>
+
+          <label for="email"> Email </label>
+          <div class="email-input">
+            <input
+              v-bind:style="{ backgroundImage: 'url(/Email.png)' }"
+              type="email"
+              name="email"
+              v-model="dadosDoFormulario.email"
+              @input="verificarFormatoEmail"
+            />
+            <img
+              v-if="dadosDoFormulario.email && !emailValido"
+              src="/Error.png"
+              alt="Email Inválido"
+            />
+            <img
+              v-if="dadosDoFormulario.email && emailValido"
+              src="/Correct.png"
+              alt="Email Válido"
+            />
+          </div>
+
+          <label for="password"> Senha </label>
+          <div class="password-input">
+            <input
+              v-bind:style="{ backgroundImage: 'url(/Password.png)' }"
+              :type="mostrarSenha ? 'text' : 'password'"
+              name="password"
+              v-model="dadosDoFormulario.password"
+            />
+            <button type="button" @click="toggleMostrarSenha" class="eye-btn">
+              <img v-if="mostrarSenha" src="/Eye.png" alt="Ocultar Senha" />
+              <img v-else src="/EyeClose.png" alt="Mostrar Senha" />
+            </button>
+          </div>
+
+          <!-- Adicionando mensagem de erro para senha -->
+          <div v-if="!senhaValida" class="error-message">
+            A senha deve ter pelo menos 6 caracteres, incluindo pelo menos 3
+            caracteres especiais.
+          </div>
+
+          <label for="Instituição"> Instituição </label>
+          <div class="select-container">
+            <select
+              v-bind:style="{ backgroundImage: 'url(/Local.png)' }"
+              id="instituto"
+              name="instituto"
+              v-model="dadosDoFormulario.instituto"
+              required
+            >
+              <option value="" disabled selected hidden>Selecione Uma</option>
+              <option value="Senai_Poço">Senai - Poço</option>
+              <option value="Senai_Benedito_Bentes">
+                Senai - Benedito Bentes
+              </option>
+              <option value="Senai_Arapiraca">Senai - Arapiraca</option>
+            </select>
+          </div>
+
+          <input id="submit" type="submit" value="Cadastrar" />
+          <h4 class="text-center">
+            Já tem uma conta?<span
+              ><router-link to="/login">Entrar</router-link></span
+            >
+          </h4>
+        </form>
+
+        <div v-if="exibirPopup" class="popup" @transitionend="fecharPopup">
+          Preencha todos os campos!
+        </div>
+      </div>
+    </div>
   </div>
 </template>
   
@@ -43,10 +134,31 @@ export default {
         password: "",
         instituto: "",
       },
+      mostrarSenha: false,
+      emailValido: null,
+      senhaValida: true,
+      exibirPopup: false,
     };
   },
   methods: {
     enviarFormulario() {
+      // verificação de campos vazios
+      if (Object.values(this.dadosDoFormulario).some((value) => value === "")) {
+        this.exibirPopup = true;
+        setTimeout(() => {
+          this.exibirPopup = false;
+        }, 5000);
+        return;
+      }
+
+      // verificação da senha durante o cadastro
+      if (
+        this.dadosDoFormulario.password.length < 6 ||
+        !this.verificarCaracteresEspeciais()
+      ) {
+        this.senhaValida = false;
+        return; // Não prossegue se a senha não for válida
+      }
       const dadosDoFormulario = { ...this.dadosDoFormulario };
 
       console.log("Dados do formulário:", this.dadosDoFormulario);
@@ -63,62 +175,54 @@ export default {
           console.error(error);
         });
     },
+    toggleMostrarSenha() {
+      this.mostrarSenha = !this.mostrarSenha;
+    },
+    verificarFormatoEmail() {
+      // Expressão regular para verificar o formato do e-mail
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.emailValido = regex.test(this.dadosDoFormulario.email);
+    },
+    verificarCaracteresEspeciais() {
+      // Verifica se a senha tem pelo menos 1 caracteres especiais
+      const caracteresEspeciais = /[!@#$%^&*(),.?":{}|<>]/g;
+      const match = this.dadosDoFormulario.password.match(caracteresEspeciais);
+      return match && match.length >= 1;
+    },
+    fecharPopup() {
+      this.exibirPopup = false;
+    },
   },
 };
 </script>
   
   
-  <style>
-#body {
-  background-color: #f4f4f4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-}
+<style>
 
-#container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  .Cadastrar-Form{
+    grid-template-areas: "centerRight centerLeft";
+  }
 
-#email,
-#password {
-  margin-bottom: 20px;
-}
+  .popup {
+    position: fixed;
+    top: 0;
+    background-color: #ff0000;
+    color: var(--Ermine-White);
+    padding: 10px 50px;
+    display: inline-block;
+    z-index: 999;
+    transition: top 0.5s ease-in-out;
+  }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
+  .popup.closed {
+    top: -50px; 
+  }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 8px;
-}
+  .error-message {
+    color: #ff0000;
+    padding: 0 0 15px;
+  }
 
-#submit {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-#submit:hover {
-  background-color: #45a049;
-}
 </style>
   
   

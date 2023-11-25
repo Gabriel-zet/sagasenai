@@ -86,16 +86,18 @@
 
       <section id='Section-Ganhadores'>
         <ProjetosGanhadores/>
+        <SlickCarousel/>
       </section>
 
       <section id='Section-Categorias'>
         <CursosECategorias/>
       </section>
+
   </main>
   </div>
 </template>
-/*  lembrar de fazer um component btn pra descer pra outra tela la, e duplicar aq  */
-   <script>
+
+<script>
 import CursosECategorias from '../components/CursosECategorias.vue';
 import ProjetosGanhadores from '../components/ProjetosGanhadores.vue';
 import MainNavbar from '../components/MainNavbar.vue';
@@ -124,6 +126,84 @@ export default {
    
 <style>
 
+.Content-Card p {
+    font-family: var(--Font-Founders);
+    margin: 0 0 70px;
+}
+
+.Content-Card h3 {
+    font-family: var(--Font-Mono-Regular);
+    margin: 10px 0 25px 0;
+    font-size: 1.8vw;
+}
+
+.swiper-slide {
+    border-left: 1px solid var(--Nardo-Grey);
+}
+
+.Info-Inst {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--Font-Mono-Regular);
+}
+
+.Card-Post {
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+    padding: 0 30px;
+    max-width: 450px;
+}
+
+.Card-Post img {
+    max-width: 450px;
+}
+
+.lC3oC2kE3bD2fB1jC2qB4eF1v div {
+    width: 15rem;
+    height: 22rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+    color: #009b5a;
+    background-color: #d3faff;
+    margin: 0 5px;
+    position: relative;
+    z-index: 1;
+    border-radius: 5%;
+    margin: 5px;
+}
+
+.hH6bF5bC7dM2dF4iB1eJ1eD4k {
+    height: 600px !important;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.commonStyle{
+    top: 0;
+    font-size: 2.5rem;
+    padding: 20px;
+    font-weight: bolder;
+    color: #ffff;
+    height: 2rem;
+    width: 2rem;
+    border: 1px solid;
+    background-color: transparent;
+    border-radius: 50%;
+    text-shadow: none;
+}
+
+.countPos {
+  display: none;
+}
+
 .Header-top {
     position: fixed;
     display: flex;
@@ -150,6 +230,7 @@ export default {
   --Silver-Birch: #484848;
   --Mica-Blue: #004AFF;
   --Magno-Finish: #000000;
+  --Myan-Orange: #D7753F;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -180,6 +261,7 @@ a {
   font-weight: 500;
   text-decoration: inherit;
   transition: .2s;
+  color: var(--Myan-Orange);
 }
 
 a:hover {
@@ -204,7 +286,7 @@ h3{
 }
 
 h4 {
-    font-size: 1.0em;
+    font-size: 1.1em;
 }
 
 p{

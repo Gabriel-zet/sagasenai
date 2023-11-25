@@ -58,7 +58,7 @@ export default {
 </script>
   
   <style>
-#body {
+/* #body {
   background-color: #f4f4f4;
   display: flex;
   align-items: center;
@@ -107,6 +107,6 @@ label {
 
 #submit:hover {
   background-color: #45a049;
-}
+} */
 </style>
   
