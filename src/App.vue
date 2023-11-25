@@ -1,0 +1,47 @@
+<template>
+  <div id="app">
+     <h1>{{ message }}</h1>
+     <router-link to="/cadastrar">Cadastrar</router-link>
+     <router-link to="/home"> - Home</router-link>
+     <router-link to="/login"> - Login</router-link>
+     <router-link to="/AdmCategorias"> - Categorias</router-link>
+     <router-link to="/AdmListagem"> - Post</router-link>
+     <router-link to="/AdmPost"> - PublicarPost</router-link>
+     <router-view/>
+  </div>
+ </template>
+ 
+ <script>
+
+ export default {
+  data() {
+     return {
+       message: ''
+     };
+  },
+  mounted() {
+     // Chama a API quando o componente é montado
+     this.fetchData();
+  },
+  methods: {
+     async fetchData() {
+       try {
+         const response = await fetch('http://localhost:12345/data');
+         const data = await response.json();
+         this.message = data.message;
+       } catch (error) {
+         console.error('Erro ao obter dados da API:', error);
+       }
+     }
+  },
+  components: {
+
+  },
+ };
+ </script>
+ 
+ <style>
+ #app {
+  margin-top: 60px;
+ }
+ </style>
