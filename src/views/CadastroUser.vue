@@ -142,7 +142,7 @@ export default {
   },
   methods: {
     enviarFormulario() {
-      // verificação de campos vazios
+      
       if (Object.values(this.dadosDoFormulario).some((value) => value === "")) {
         this.exibirPopup = true;
         setTimeout(() => {
@@ -150,8 +150,7 @@ export default {
         }, 5000);
         return;
       }
-
-      // verificação da senha durante o cadastro
+      
       if (
         this.dadosDoFormulario.password.length < 6 ||
         !this.verificarCaracteresEspeciais()
@@ -170,6 +169,7 @@ export default {
         .post("http://localhost:12345/users/create", dadosDoFormulario)
         .then((response) => {
           console.log(response.data);
+          this.$router.push({ name: "Login" });
         })
         .catch((error) => {
           console.error(error);
@@ -184,7 +184,7 @@ export default {
       this.emailValido = regex.test(this.dadosDoFormulario.email);
     },
     verificarCaracteresEspeciais() {
-      // Verifica se a senha tem pelo menos 1 caracteres especiais
+      // Verifica se a senha tem pelo menos 1 caracteres especial
       const caracteresEspeciais = /[!@#$%^&*(),.?":{}|<>]/g;
       const match = this.dadosDoFormulario.password.match(caracteresEspeciais);
       return match && match.length >= 1;

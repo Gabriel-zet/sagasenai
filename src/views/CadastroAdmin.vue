@@ -50,18 +50,8 @@ export default {
           }
         })
         .then((response) => {
-          console.log(response.data);
-          if (response.data.token) {
-            document.cookie = `token=${response.data.token}; path=/`;
-            document.cookie = `loggedIn=true; path=/`;
-            this.$store.commit("user/setUser", {
-              ...response.data.user,
-              isAuthenticated: true,
-              isAdmin: true,
-            });
-          } else {
-            console.error("Token não recebido na resposta.");
-          }
+          console.log(response.data.message);
+          this.$router.push({ name: "LoginAdm" });
         })
         .catch((error) => {
           console.error(error);
