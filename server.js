@@ -61,6 +61,21 @@ app.post('/users/create', (req, res) => {
     });
 });
 
+app.delete('/user/:userId', (req, res) => {
+    const userId = req.params.userId;
+    knex('users').where({ id: userId }).del()
+        .then(() => {
+            console.log(`Usuário com ID ${userId} excluído com sucesso.`);
+            res.status(204).send(); 
+        })
+        .catch((err) => {
+            console.error(`Erro ao excluir usuário com ID ${userId}:`, err);
+            res.status(500).json({ error: 'Erro interno ao excluir o usuário.' });
+        });
+});
+
+
+
 app.post('/admin/create', verificarToken, (req, res) => {
     const { email, password, nome } = req.body;
   
