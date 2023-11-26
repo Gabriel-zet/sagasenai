@@ -31,10 +31,14 @@
           <option value="Senai5">Senai5</option>
         </select>
         <select v-model="dadosCriar.categoria" required>
-              <option value="" disabled selected>Selecione uma categoria</option>
-              <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.nome">
-               {{ categoria.nome }}
-              </option>
+          <option value="" disabled selected>Selecione uma categoria</option>
+          <option
+            v-for="categoria in categorias"
+            :key="categoria.id"
+            :value="categoria.nome"
+          >
+            {{ categoria.nome }}
+          </option>
         </select>
 
         <label for="data">ganhador</label>
@@ -49,10 +53,11 @@
 
 <script>
 import axios from "axios";
-
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      posts: [],
       categorias: [],
       dadosCriar: {
         title: "",
@@ -71,8 +76,18 @@ export default {
   },
   methods: {
     criarPost() {
+      const token = Cookies.get("token");
+      console.log("token method", token);
+      if (!token) {
+        console.warn("Token não encontrado");
+        return;
+      }
       axios
-        .post("http://localhost:12345/admin/criarPost", this.dadosCriar)
+        .post("http://localhost:12345/admin/criarPost", this.dadosCriar, {
+          headers: {
+            authorization: token,
+          },
+        })
         .then((response) => {
           console.log("Postagem Criada", response.data);
         })

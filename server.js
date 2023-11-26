@@ -225,7 +225,7 @@ app.post("/admin/criarPost", verificarToken, (req, res) => {
         .first()
         .then(existingPost => {
             if (existingPost) {
-                return res.status(400).json({ error: 'Já existe um post com este título.' });
+                return res.status(400).json({ error: 'Já existe um post com este título.', isAdmin: true  });
             } else {
                 return knex('posts')
                     .insert({
@@ -255,6 +255,7 @@ app.get("/admin/listarPosts", (req, res) => {
     knex('posts')
         .select('*')
         .then(posts => {
+
             res.status(200).json({ posts });
         })
         .catch(error => {
