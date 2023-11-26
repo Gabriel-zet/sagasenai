@@ -62,30 +62,39 @@ app.post('/users/create', (req, res) => {
 });
 
 app.post('/admin/create', verificarToken, (req, res) => {
-
-    var email = req.body.email;
-    var password = req.body.password;
-    var nome = req.body.nome;
-
-    knex('admin').where({ email: email }).first().then(adm => {
+    const { email, password, nome } = req.body;
+  
+    knex('admin')
+      .where({ email: email })
+      .first()
+      .then((adm) => {
         if (!adm) {
-            const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync(password, salt);
-
-            return knex('admin').insert({
-                email: email,
-                password: hash,
-                nome: nome,
-            });
+          const salt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync(password, salt);
+  
+          return knex('admin').insert({
+            email: email,
+            password: hash,
+            nome: nome,
+          });
         } else {
-            return Promise.reject();
+          return Promise.reject({ message: 'E-mail já em uso', status: 400 });
         }
-    }).then((r) => {
-        console.log(r)
-    }).catch((err) => {
+      })
+      .then((result) => {
+        res.status(201).json({ message: 'Administrador criado com sucesso' });
+      })
+      .catch((err) => {
         console.error(err);
-    });
-});
+  
+        if (err.status) {
+          res.status(err.status).json({ error: err.message });
+        } else {
+          res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+      });
+  });
+  
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
