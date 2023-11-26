@@ -156,6 +156,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 40px;
+  color: var(--Magno-Finish);
 }
 
 .Listagem-Full h3 {
@@ -182,7 +183,7 @@ export default {
   background: var(--Nardo-Grey);
   border-radius: 0;
   padding: 15px 10px;
-  margin: 20px 0;
+  margin: 15px 0 20px;
   font-family: 'Founders Grotesk';
   font-size: 20px;
   color: var(--Silver-Birch);

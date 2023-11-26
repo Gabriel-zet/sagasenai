@@ -179,6 +179,10 @@ input:active,
 input:focus,
 input:visited,
 input:hover,
+textarea:active,
+textarea:focus,
+textarea:visited,
+textarea:hover,
 button:active,
 button:focus,
 button:visited,
@@ -200,10 +204,7 @@ select:hover {
   /* Estilo da imagem de fundo */
   font-family: var(--Font-Founders);
   font-size: 18px;
-}
-
-select {
-  appearance: none;
+  appearance: none; 
   -webkit-appearance: none;
   -moz-appearance: none;
 }
