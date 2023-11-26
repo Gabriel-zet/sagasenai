@@ -18,7 +18,9 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 30000000 }
 }));
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({
+    exposedHeaders: ['Authorization'],
+  }));
 app.use(express.static('public'));
 
 
@@ -141,7 +143,7 @@ app.post('/admin/login', async (req, res) => {
   });
 
 
-app.post("/admin/criarCategoria", verificarToken, (req, res) => {
+app.post("/admin/criarCategoria", verificarToken,(req, res) => {
     const categoria = req.body.categoria;
 
     knex('categorias')
@@ -152,7 +154,7 @@ app.post("/admin/criarCategoria", verificarToken, (req, res) => {
                 return knex('categorias')
                     .insert({ nome: categoria })
                     .then(() => {
-                        res.status(200).json({ message: 'Categoria criada com sucesso' });
+                        res.status(200).json({ message: 'Categoria criada com sucesso', isAdmin: true });
                     })
                     .catch(err => {
                         res.status(500).json({ message: 'Erro ao criar categoria', error: err });
