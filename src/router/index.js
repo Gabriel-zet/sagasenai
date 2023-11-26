@@ -10,12 +10,15 @@ import PublicarPost from "../views/admin/PublicarPost"
 import ProjetoView from "../views/ProjetoView"
 import UserProfile from '../views/UserProfile.vue'
 import store from '../store';
+import Cookies from 'js-cookie'
+import LeaveAdm from '../views/admin/LeaveAdm.vue'
 
 
 const isAdmin = () => {
   const user = store.getters['user/getUser'];
   return user && user.isAuthenticated === true && user.isAdmin === true;
 };
+const hasToken = () => !!Cookies.get('token');
 const routes = [
   {
     path: '/', redirect: '/home'
@@ -46,13 +49,10 @@ const routes = [
     name: 'CadastrarAdm',
     component: CadastroAdmin,
     beforeEnter: (to, from, next) => {
-      console.log('Guard de AdmListagem:', store.state.user);
-      if (isAdmin()) {
-        console.log('Permitido');
+      if (isAdmin() && hasToken()) {
         next();
       } else {
-        console.log('Redirecionando para LoginAdm');
-        next({ name: 'LoginAdm' });
+        next('/login');
       }
     },
   },
@@ -61,13 +61,10 @@ const routes = [
     name: 'AdmCategorias',
     component: CategoriasPost,
     beforeEnter: (to, from, next) => {
-      console.log('Guard de AdmListagem:', store.state.user);
-      if (isAdmin()) {
-        console.log('Permitido');
+      if (isAdmin() && hasToken()) {
         next();
       } else {
-        console.log('Redirecionando para LoginAdm');
-        next({ name: 'LoginAdm' });
+        next('/login');
       }
     },
   },
@@ -76,13 +73,10 @@ const routes = [
     name: 'AdmListagem',
     component: ListagemPost,
     beforeEnter: (to, from, next) => {
-      console.log('Guard de AdmListagem:', store.state.user);
-      if (isAdmin()) {
-        console.log('Permitido');
+      if (isAdmin() && hasToken()) {
         next();
       } else {
-        console.log('Redirecionando para LoginAdm');
-        next({ name: 'LoginAdm' });
+        next('/login');
       }
     },
   },
@@ -91,13 +85,10 @@ const routes = [
     name: 'AdmPublicar',
     component: PublicarPost,
     beforeEnter: (to, from, next) => {
-      console.log('Guard de AdmListagem:', store.state.user);
-      if (isAdmin()) {
-        console.log('Permitido');
+      if (isAdmin() && hasToken()) {
         next();
       } else {
-        console.log('Redirecionando para LoginAdm');
-        next({ name: 'LoginAdm' });
+        next('/login');
       }
     },
   },
@@ -112,7 +103,15 @@ const routes = [
     name: 'LoginAdm',
     component: LoginAdmin,
   },
-
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: LeaveAdm,
+    beforeEnter: (to, from, next) => {
+      Cookies.remove('token', { path: '' });
+      next('login')
+    }
+  }
 
 ]
 

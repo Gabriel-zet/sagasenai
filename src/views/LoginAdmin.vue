@@ -33,7 +33,6 @@ export default {
         email: this.dadosDoFormulario.email,
         password: this.dadosDoFormulario.password,
       };
-
       axios
         .post("http://localhost:12345/admin/login", dadosDoFormulario)
         .then((response) => {
@@ -43,7 +42,7 @@ export default {
           this.$store.commit("user/setUser", {
             ...response.data.user,
             isAuthenticated: true,
-            isAdmin: response.data.isAdmin
+            isAdmin: response.data.isAdmin,
           });
           this.$store.commit("setAdminStatus", response.data.isAdmin);
           console.log("Redirecionando para /AdmListagem");
