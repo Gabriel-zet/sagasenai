@@ -7,7 +7,6 @@ const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const verificarToken = require('./middlewares/verificarToken'); // Importe o middleware
 
-
 const jwtSecret = 'suaChaveSecretaJWT';
 
 app.use(express.urlencoded({ extended: true }));
@@ -18,9 +17,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 30000000 }
 }));
-app.use(cors({
-    exposedHeaders: ['Authorization'],
-  }));
+
+app.use(cors({ origin: 'http://localhost:3000', credentials: true, exposedHeaders: ['Authorization'], }));
 app.use(express.static('public'));
 
 
@@ -90,60 +88,62 @@ app.post('/admin/create', verificarToken, (req, res) => {
 });
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-  
+
     try {
-      const user = await knex('users').where({ email }).first();
-  
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
-  
-        res.json({
-          message: 'Login bem-sucedido!',
-          isAdmin: false,
-          token: token,
-          user: {
-            id: user.id,
-            email: user.email,
-          }
-        });
-      } else {
-        res.status(401).json({ message: 'Credenciais inválidas' });
-      }
+        const user = await knex('users').where({ email }).first();
+
+        if (user && bcrypt.compareSync(password, user.password)) {
+            const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+
+            res.cookie('id', user.id)
+            res.json({
+                message: 'Login bem-sucedido!',
+                isAdmin: false,
+                token: token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                }
+
+            });
+        } else {
+            res.status(401).json({ message: 'Credenciais inválidas' });
+        }
     } catch (error) {
-      console.error('Erro ao autenticar:', error);
-      res.status(500).json({ message: 'Erro interno no servidor' });
+        console.error('Erro ao autenticar:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
     }
 });
 
 app.post('/admin/login', async (req, res) => {
     const { email, password } = req.body;
-  
+
     try {
-      const admin = await knex('admin').where({ email }).first();
-  
-      if (admin && bcrypt.compareSync(password, admin.password)) {
-        const token = jwt.sign({ adminId: admin.id }, jwtSecret, { expiresIn: '1h' });
-  
-        res.json({
-          message: 'Login bem-sucedido!',
-          isAdmin: true,
-          token: token,
-          user: {
-            id: admin.id,
-            email: admin.email,
-          }
-        });
-      } else {
-        res.status(401).json({ message: 'Credenciais inválidas' });
-      }
+        const admin = await knex('admin').where({ email }).first();
+
+        if (admin && bcrypt.compareSync(password, admin.password)) {
+            const token = jwt.sign({ adminId: admin.id }, jwtSecret, { expiresIn: '1h' });
+
+            res.json({
+                message: 'Login bem-sucedido!',
+                isAdmin: true,
+                token: token,
+                user: {
+                    id: admin.id,
+                    email: admin.email,
+                }
+            });
+        } else {
+            res.status(401).json({ message: 'Credenciais inválidas' });
+        }
     } catch (error) {
-      console.error('Erro ao autenticar:', error);
-      res.status(500).json({ message: 'Erro interno no servidor' });
+        console.error('Erro ao autenticar:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
     }
-  });
+});
 
 
-app.post("/admin/criarCategoria", verificarToken,(req, res) => {
+app.post("/admin/criarCategoria", verificarToken, (req, res) => {
     const categoria = req.body.categoria;
 
     knex('categorias')
@@ -261,6 +261,28 @@ app.get("/admin/listarPosts", (req, res) => {
             console.error('Erro ao listar posts:', error);
             res.status(500).json({ error: 'Erro interno do servidor ao listar posts.' });
         });
+});
+
+app.get('/user/:id', async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await knex('users').where({ id: userId }).first();
+        console.log(user)
+        if (user) {
+            res.json({
+                id: user.id,
+                email: user.email,
+                instituto: user.instituto,
+                nome: user.nome,
+            });
+        } else {
+            res.status(404).json({ message: 'Usuário não encontrado' });
+        }
+    } catch (error) {
+        console.error('Erro ao obter informações do usuário:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
 });
 
 app.get("/logout", (req, res) => {

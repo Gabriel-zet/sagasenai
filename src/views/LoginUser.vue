@@ -72,6 +72,7 @@
   
   <script>
 import axios from "axios";
+import Cookie from 'js-cookie';
 
 export default {
   data() {
@@ -95,13 +96,14 @@ export default {
         .post("http://localhost:12345/login", dadosDoFormulario)
         .then((response) => {
           console.log("Login bem-sucedido!", response.data);
-
+          document.cookie = `token=${response.data.token}; path=/`;
+          document.cookie = `loggedIn=true; path=/`;
           this.$store.commit("user/setUser", {
             ...response.data.user,
             isAuthenticated: true,
             isAdmin: response.data.isAdmin,
           });
-
+          Cookie.set('userId', response.data.user.id)
           this.$router.push("/UserProfile");
         })
         .catch((error) => {

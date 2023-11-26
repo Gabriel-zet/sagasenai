@@ -11,13 +11,40 @@
   </div>
 </template>
 
+
 <script>
+import axios from "axios";
+import Cookies from "js-cookie";
+
 export default {
-  computed: {
-    // eslint-disable-next-line
-    user() {
-      return this.$store.getters["user/getUser"];
-    },
+  data() {
+    return {
+      user: {
+        email: "",
+        id: "",
+        instituto: "",
+      },
+    };
+  },
+  created() {
+    const userId = Cookies.get("userId");
+
+    if (userId) {
+      axios
+        .get(`http://localhost:12345/user/${userId}`)
+        .then((response) => {
+          console.log("Resposta da API:", response);
+          this.user = response.data; // Ajuste aqui
+        })
+        .catch((error) => {
+          console.error("Erro ao obter informações do usuário:", error);
+        });
+    } else {
+      console.error("userId não está definido.");
+    }
   },
 };
 </script>
+
+<style>
+</style>

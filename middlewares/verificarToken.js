@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const jwtSecret = 'suaChaveSecretaJWT';
 
 const verificarToken = (req, res, next) => {
-  console.log('m')
   const token = req.headers['authorization'];
   console.log(req.headers);
   if (token) {

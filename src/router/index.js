@@ -52,7 +52,7 @@ const routes = [
       if (isAdmin() && hasToken()) {
         next();
       } else {
-        next('/login');
+        next('/');
       }
     },
   },
@@ -64,7 +64,7 @@ const routes = [
       if (isAdmin() && hasToken()) {
         next();
       } else {
-        next('/login');
+        next('/');
       }
     },
   },
@@ -76,7 +76,7 @@ const routes = [
       if (isAdmin() && hasToken()) {
         next();
       } else {
-        next('/login');
+        next('/');
       }
     },
   },
@@ -88,7 +88,7 @@ const routes = [
       if (isAdmin() && hasToken()) {
         next();
       } else {
-        next('/login');
+        next('/');
       }
     },
   },
@@ -119,5 +119,22 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiredPermission = to.meta.requiredPermission;
+
+  if (requiresAuth) {
+    const token = Cookies.get('token');
+
+    if (!token || token !== requiredPermission) {
+      next('/login');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router
