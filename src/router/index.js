@@ -32,6 +32,13 @@ const routes = [
     path: '/UserProfile',
     name: 'UserProfile',
     component: UserProfile,
+    beforeEnter: (to, from, next) => {
+      if (hasToken()) {
+        next();
+      } else {
+        next('/');
+      }
+    },
   },
   {
     path: '/login',
