@@ -21,7 +21,7 @@
 </template>
   
 <script>
-import Cookies from 'js-cookie';  // Corrigir a importação do módulo
+import Cookies from 'js-cookie';  
 import axios from "axios";
 
 export default {

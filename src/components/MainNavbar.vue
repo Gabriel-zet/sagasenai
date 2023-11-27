@@ -5,7 +5,7 @@
       </div>
       <div class="Menu-Icons">
         <router-link to="/AdmListagem"><div class='Icon-Border'><img :src="searchIcon" class="SearchIcon HeaderIcon" alt="Search Icon" /></div></router-link>
-        <router-link to="/login"><div class='Icon-Border'><img :src="perfilIcon" class="SearchIcon HeaderIcon" alt="Profile Icon" /></div></router-link>
+        <router-link :to="getProfileLink()"><div class='Icon-Border'><img :src="perfilIcon" class="SearchIcon HeaderIcon" alt="Profile Icon" /></div></router-link>
       </div>
     </div>
 </template>
@@ -13,7 +13,7 @@
 <script>
   import searchIcon from '@/assets/Search.svg';
   import perfilIcon from '@/assets/Perfil.svg';
-
+  import Cookies from 'js-cookie'
   
   export default {
     name: 'MainNavbar',
@@ -23,6 +23,16 @@
       perfilIcon,
     };
   },
+  methods: {
+    getProfileLink() {
+      const hasToken = Cookies.get('token')
+      if (hasToken) {
+        return '/UserProfile';
+      } else {
+        return '/login';
+      }
+    }
+  }
   };
 </script>
   
