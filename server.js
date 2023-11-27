@@ -14,14 +14,40 @@ app.use(express.json());
 app.use(session({
     secret: 'chave-secreta-unicA$1@3',
     resave: false,
+    domain: 'localhost',
+    path: '/',
     saveUninitialized: true,
+    secure: false,
     cookie: { maxAge: 30000000 }
 }));
-
-app.use(cors({ origin: 'http://localhost:3000', credentials: true, exposedHeaders: ['Authorization'], }));
 app.use(express.static('public'));
 
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    exposedHeaders: ['authorization'],
+}));
 
+app.options('*', cors()); // Permita opções para todas as rotas
+
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    next();
+});
+
+app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).json({ error: 'Credenciais inválidas' });
+    } else {
+        next(err);
+    }
+});
+
+// olha o discord <
 app.get('/data', (req, res) => {
 
     res.json({ message: 'Dados da API aqui!' });
@@ -48,6 +74,7 @@ app.post('/users/create', (req, res) => {
                 password: hash,
                 nome: nome,
                 instituto: instituto,
+                votou: 0,
             });
         } else {
             res.redirect("users/cadastrar");
@@ -66,7 +93,7 @@ app.delete('/user/:userId', (req, res) => {
     knex('users').where({ id: userId }).del()
         .then(() => {
             console.log(`Usuário com ID ${userId} excluído com sucesso.`);
-            res.status(204).send(); 
+            res.status(204).send();
         })
         .catch((err) => {
             console.error(`Erro ao excluir usuário com ID ${userId}:`, err);
@@ -78,38 +105,38 @@ app.delete('/user/:userId', (req, res) => {
 
 app.post('/admin/create', verificarToken, (req, res) => {
     const { email, password, nome } = req.body;
-  
+
     knex('admin')
-      .where({ email: email })
-      .first()
-      .then((adm) => {
-        if (!adm) {
-          const salt = bcrypt.genSaltSync(10);
-          const hash = bcrypt.hashSync(password, salt);
-  
-          return knex('admin').insert({
-            email: email,
-            password: hash,
-            nome: nome,
-          });
-        } else {
-          return Promise.reject({ message: 'E-mail já em uso', status: 400 });
-        }
-      })
-      .then((result) => {
-        res.status(201).json({ message: 'Administrador criado com sucesso' });
-      })
-      .catch((err) => {
-        console.error(err);
-  
-        if (err.status) {
-          res.status(err.status).json({ error: err.message });
-        } else {
-          res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-      });
-  });
-  
+        .where({ email: email })
+        .first()
+        .then((adm) => {
+            if (!adm) {
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(password, salt);
+
+                return knex('admin').insert({
+                    email: email,
+                    password: hash,
+                    nome: nome,
+                });
+            } else {
+                return Promise.reject({ message: 'E-mail já em uso', status: 400 });
+            }
+        })
+        .then((result) => {
+            res.status(201).json({ message: 'Administrador criado com sucesso' });
+        })
+        .catch((err) => {
+            console.error(err);
+
+            if (err.status) {
+                res.status(err.status).json({ error: err.message });
+            } else {
+                res.status(500).json({ error: 'Erro interno do servidor' });
+            }
+        });
+});
+
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -249,7 +276,7 @@ app.post("/admin/criarPost", verificarToken, (req, res) => {
         .first()
         .then(existingPost => {
             if (existingPost) {
-                return res.status(400).json({ error: 'Já existe um post com este título.', isAdmin: true  });
+                return res.status(400).json({ error: 'Já existe um post com este título.', isAdmin: true });
             } else {
                 return knex('posts')
                     .insert({
@@ -288,6 +315,82 @@ app.get("/admin/listarPosts", (req, res) => {
         });
 });
 
+app.get('/listarPost/:id', (req, res) => {
+    const postId = req.params.id;
+
+    knex('posts')
+        .where({ id: postId })
+        .first()
+        .then(post => {
+            if (post) {
+                res.status(200).json({ post });
+            } else {
+                res.status(404).json({ message: 'Post não encontrado' });
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao obter informações do post:', error);
+            res.status(500).json({ error: 'Erro interno no servidor' });
+        });
+});
+app.post('/votar/:postId', verificarToken, (req, res) => {
+    console.log('Headers da solicitação:', req.headers);
+    console.log('Corpo da solicitação:', req.body);
+    const { userId } = req.decoded;
+    if (!userId) {
+        return res.status(401).json({ error: 'Usuário não autenticado' });
+    }
+
+    const postId = req.params.postId;
+    knex.transaction(async (trx) => {
+        try {
+            const user = await trx('users').where({ id: userId }).first();
+            if (!user) {
+                return res.status(404).json({ error: 'Usuário não encontrado' });
+            }
+
+            console.log(user)
+            
+            if (user.votou) {
+                return res.status(400).json({ error: 'Usuário já votou', postId });
+            }
+ 
+            await trx('posts').where({ id: postId }).increment('votos', 1);
+
+            await trx('users').where({ id: userId }).update({ votou: 1 });
+            await trx.commit(); 
+
+            res.status(200).json({ message: 'Voto registrado com sucesso' });
+        } catch (error) {
+            await trx.rollback();
+            console.error('Erro ao votar:', error);
+            res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+    });
+});
+
+
+
+app.get('/post/:id', cors(), (req, res) => {
+    const postId = req.params.id;
+
+    knex('posts')
+        .where({ id: postId })
+        .first()
+        .then(post => {
+            if (post) {
+                res.status(200).json({ post });
+            } else {
+                res.status(404).json({ message: 'Post não encontrado' });
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao obter informações do post:', error);
+            res.status(500).json({ error: 'Erro interno no servidor' });
+        });
+});
+
+
 app.get('/user/:id', async (req, res) => {
     const userId = req.params.id;
 
@@ -314,6 +417,9 @@ app.get("/logout", (req, res) => {
     req.session.user = undefined
     res.redirect("/")
 })
+
+
+
 
 app.listen(12345, () => {
     console.log("API RODANDO!");

@@ -7,11 +7,13 @@ import LoginUser from "../views/LoginUser.vue"
 import CategoriasPost from "../views/admin/CategoriasPost"
 import ListagemPost from "../views/admin/ListagemPost"
 import PublicarPost from "../views/admin/PublicarPost"
-import ProjetoView from "../views/ProjetoView"
+import TesteVotar from "../views/TesteVotar"
 import UserProfile from '../views/UserProfile.vue'
 import store from '../store';
 import Cookies from 'js-cookie'
 import LeaveAdm from '../views/admin/LeaveAdm.vue'
+import ListagemPostUser from "../views/ListagemPostUser"
+import VotarPage from "../views/VotarPage.vue"
 
 
 const isAdmin = () => {
@@ -50,6 +52,17 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: HomeView,
+  },
+  {
+    path: '/Listagem',
+    name: 'Listagem',
+    component: ListagemPostUser,
+  },
+  {
+    path: '/post/:id',
+    name: 'Votar',
+    component: VotarPage,
+    props: true, 
   },
   {
     path: '/CadastrarAdmin',
@@ -102,7 +115,7 @@ const routes = [
   {
     path: '/teste',
     name: 'teste',
-    component: ProjetoView
+    component: TesteVotar
   },
 
   {
@@ -110,6 +123,7 @@ const routes = [
     name: 'LoginAdm',
     component: LoginAdmin,
   },
+  
   {
     path: '/logout',
     name: 'Logout',

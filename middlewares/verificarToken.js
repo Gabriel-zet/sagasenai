@@ -3,7 +3,7 @@ const jwtSecret = 'suaChaveSecretaJWT';
 
 const verificarToken = (req, res, next) => {
   const token = req.headers['authorization'];
-  console.log(req.headers);
+
   if (token) {
     jwt.verify(token, jwtSecret, (err, decoded) => {
       if (err) {

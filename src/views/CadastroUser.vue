@@ -172,7 +172,7 @@ export default {
           this.$router.push({ name: "Login" });
         })
         .catch((error) => {
-          console.error(error);
+          console.error('teste', error);
         });
     },
     toggleMostrarSenha() {

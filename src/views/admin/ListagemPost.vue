@@ -8,6 +8,7 @@
           <strong>{{  post.descricao }}</strong> - <strong>{{  post.instituicao}}</strong> -
           <strong>{{  post.video }}</strong> - <strong>{{  post.data }}</strong> -
           <strong>{{  post.categoria }}</strong> - <strong>{{  post.video }}</strong> -
+          <strong> {{  post.votos }}</strong>
         </li>
       </ul>
     </div>
