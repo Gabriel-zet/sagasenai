@@ -2,9 +2,9 @@
   <div>
     <h2>Lista de Categorias:</h2>
     <div>
-      <button v-for="categoria in categorias" :key="categoria.id" @click="selecionarCategoria(categoria)">
-        {{ categoria.nome }}
-      </button>
+        <button v-for="categoria in categorias" :key="categoria.id" @click="selecionarCategoria(categoria)">
+          {{ categoria.nome }}
+        </button>
     </div>
     <h2>Lista de Posts</h2>
     <div v-if="postsFiltrados.length > 0">
@@ -42,6 +42,8 @@ export default {
   methods: {
     selecionarCategoria(categoria) {
       this.categoriaSelecionada = categoria.nome;
+      
+      this.$router.push({ name: 'listagem', params: { categoria: categoria.nome } });
     },
   },
   mounted() {
@@ -67,7 +69,6 @@ export default {
   },
 };
 </script>
-
 <style>
 /* Estilos opcionais */
 </style>

@@ -38,7 +38,6 @@ export default {
     enviarFormulario() {
       const dadosDoFormulario = { ...this.dadosDoFormulario };
       const token = Cookies.get('token');  
-      console.log("Dados do formulário:", this.dadosDoFormulario);
 
       this.dadosDoFormulario.nome = "";
       this.dadosDoFormulario.email = "";

@@ -159,16 +159,14 @@ export default {
         return; // Não prossegue se a senha não for válida
       }
       const dadosDoFormulario = { ...this.dadosDoFormulario };
-
-      console.log("Dados do formulário:", this.dadosDoFormulario);
+      
 
       this.dadosDoFormulario.nome = "";
       this.dadosDoFormulario.email = "";
 
       axios
         .post("http://localhost:12345/users/create", dadosDoFormulario)
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
           this.$router.push({ name: "Login" });
         })
         .catch((error) => {

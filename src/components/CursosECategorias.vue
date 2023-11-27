@@ -1,17 +1,4 @@
 <template>
-  <div class="boxCenter">
-    <div class="CardGrid">
-      <h2>SELECIONE O CURSO E CONHEÇA OS PROJETOS DA MOSTRA</h2>
-      <div class="card-section cards">
-        <CardProjetos
-          v-for="(card, index) in cards"
-          :key="index"
-          :title="card.title"
-          :content="card.conteudo"
-        />
-      </div>
-    </div>
-  </div>
   <div class="boxFooter Center">
     <h2>Categorias</h2>
     <div class="Footer-Category">
@@ -19,6 +6,7 @@
         v-for="(categoria, index) in categorias"
         :key="index"
         :nome="categoria.nome"
+        @click="navegarParaListagem"
       />
     </div>
 
@@ -31,28 +19,16 @@
 
 <script>
 import CardFooter from "./CardFooter.vue";
-import CardProjetos from "./CardProjetos.vue";
+
 import axios from "axios";
 
 export default {
   components: {
-    CardProjetos,
     CardFooter,
   },
   data() {
     return {
-      cards: [
-        { title: "Título 1", conteudo: "Conteúdo 1" },
-        { title: "Título 2", conteudo: "Conteúdo 2" },
-        { title: "Título 3", conteudo: "Conteúdo 3" },
-        { title: "Título 1", conteudo: "Conteúdo 1" },
-        { title: "Título 2", conteudo: "Conteúdo 2" },
-        { title: "Título 3", conteudo: "Conteúdo 3" },
-        { title: "Título 1", conteudo: "Conteúdo 1" },
-        { title: "Título 2", conteudo: "Conteúdo 2" },
-        { title: "Título 3", conteudo: "Conteúdo 3" },
-        // Add +
-      ],
+
       categorias: [],
     };
   },
@@ -67,13 +43,18 @@ export default {
         })
 
         .then((response) => {
-          console.log(this.categorias);
           this.categorias = response.data.categorias;
         })
         .catch((err) => {
           console.warn("Erro ao obter categorias:", err);
         });
+        
     },
+    
+    navegarParaListagem() {
+      this.$router.push({ name: 'listagem' });
+    
+  },
   },
 };
 </script>

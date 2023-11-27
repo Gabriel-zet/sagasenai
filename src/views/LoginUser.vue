@@ -95,7 +95,7 @@ export default {
       axios
         .post("http://localhost:12345/login", dadosDoFormulario)
         .then((response) => {
-          console.log("Login bem-sucedido!", response.data);
+          console.log("Login bem-sucedido!");
           document.cookie = `token=${response.data.token}; path=/`;
           document.cookie = `loggedIn=true; path=/`;
           this.$store.commit("user/setUser", {

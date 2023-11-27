@@ -1,5 +1,3 @@
-<!-- PostMaisVotado.vue -->
-
 <template>
   <div>
     <h2>Post Mais Votado ({{ categoriaSelecionada || 'Geral' }}):</h2>
@@ -24,15 +22,12 @@ export default {
   computed: {
     postsMaisVotados() {
       const postsPorCategoria = {};
-
-      // Agrupa os posts por categoria
+      
       this.posts.forEach(post => {
         if (!postsPorCategoria[post.categoria] || postsPorCategoria[post.categoria].votos < post.votos) {
           postsPorCategoria[post.categoria] = post;
         }
       });
-
-      // Retorna a lista de posts mais votados por categoria
       return Object.values(postsPorCategoria);
     },
   },

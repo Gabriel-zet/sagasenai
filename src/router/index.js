@@ -7,7 +7,6 @@ import LoginUser from "../views/LoginUser.vue"
 import CategoriasPost from "../views/admin/CategoriasPost"
 import ListagemPost from "../views/admin/ListagemPost"
 import PublicarPost from "../views/admin/PublicarPost"
-import TesteVotar from "../views/TesteVotar"
 import UserProfile from '../views/UserProfile.vue'
 import store from '../store';
 import Cookies from 'js-cookie'
@@ -54,8 +53,8 @@ const routes = [
     component: HomeView,
   },
   {
-    path: '/Listagem',
-    name: 'Listagem',
+    path: '/Listagem/:categoria?',
+    name: 'listagem',
     component: ListagemPostUser,
   },
   {
@@ -112,12 +111,6 @@ const routes = [
       }
     },
   },
-  {
-    path: '/teste',
-    name: 'teste',
-    component: TesteVotar
-  },
-
   {
     path: '/LoginAdm',
     name: 'LoginAdm',
